@@ -25,7 +25,9 @@ class BrewProvider extends ChangeNotifier {
   Future<int> addRecord(BrewRecord record) async {
     final id = await _db.insertRecord(record);
     record.id = id;
-    _records.insert(0, record);
+    // 数据库 insertRecord 已把记录加入共享缓存（_records 同一引用），无需重复添加
+    // 只排序确保最新在前
+    _records.sort((a, b) => b.brewDate.compareTo(a.brewDate));
     notifyListeners();
     return id;
   }
