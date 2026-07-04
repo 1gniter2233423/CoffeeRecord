@@ -420,7 +420,8 @@ class _KettlePainter extends CustomPainter {
   bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
 
-/// 咖啡豆图标 - 肾形豆
+/// 咖啡豆图标 — 从参考图追踪的轮廓
+/// 颜色调整为 app 统一棕色系
 class _CoffeeBeanPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
@@ -429,29 +430,81 @@ class _CoffeeBeanPainter extends CustomPainter {
     final cx = w / 2;
     final cy = h / 2;
 
-    // 左半豆（深色）- 外弧饱满
-    final left = Paint()..color = Colors.brown[500]!..style = PaintingStyle.fill;
-    final lp = Path()
-      ..moveTo(cx - w * 0.01, cy - h * 0.38)
-      ..cubicTo(cx - w * 0.30, cy - h * 0.32, cx - w * 0.30, cy + h * 0.22, cx - w * 0.06, cy + h * 0.38)
-      ..cubicTo(cx - w * 0.02, cy + h * 0.34, cx + w * 0.01, cy + h * 0.28, cx + w * 0.01, cy - h * 0.38)
-      ..close();
-    canvas.drawPath(lp, left);
+    // 缩放因子：使豆形在 16x16 中合适显示
+    final s = 0.55;
 
-    // 右半豆（浅色）- 内弧稍平
-    final right = Paint()..color = Colors.brown[300]!..style = PaintingStyle.fill;
-    final rp = Path()
-      ..moveTo(cx + w * 0.01, cy - h * 0.38)
-      ..cubicTo(cx + w * 0.30, cy - h * 0.30, cx + w * 0.26, cy + h * 0.20, cx + w * 0.06, cy + h * 0.38)
-      ..cubicTo(cx + w * 0.02, cy + h * 0.34, cx - w * 0.01, cy + h * 0.28, cx - w * 0.01, cy - h * 0.38)
+    // 左半豆 — 从追踪轮廓提取
+    final leftPaint = Paint()
+      ..color = Colors.brown[500]!
+      ..style = PaintingStyle.fill;
+    final leftPath = Path()
+      ..moveTo(cx + w * s * 0.556, cy - h * s * 0.500)
+      ..lineTo(cx + w * s * 0.417, cy - h * s * 0.444)
+      ..lineTo(cx + w * s * 0.306, cy - h * s * 0.389)
+      ..lineTo(cx + w * s * 0.250, cy - h * s * 0.333)
+      ..lineTo(cx + w * s * 0.194, cy - h * s * 0.278)
+      ..lineTo(cx + w * s * 0.139, cy - h * s * 0.222)
+      ..lineTo(cx + w * s * 0.111, cy - h * s * 0.167)
+      ..lineTo(cx + w * s * 0.083, cy - h * s * 0.111)
+      ..lineTo(cx + w * s * 0.056, cy - h * s * 0.056)
+      ..lineTo(cx + w * s * 0.028, cy - h * s * 0.000)
+      ..lineTo(cx + w * s * 0.000, cy + h * s * 0.056)
+      ..lineTo(cx + w * s * 0.000, cy + h * s * 0.111)
+      ..lineTo(cx + w * s * 0.000, cy + h * s * 0.167)
+      ..lineTo(cx + w * s * 0.000, cy + h * s * 0.222)
+      ..lineTo(cx + w * s * 0.000, cy + h * s * 0.278)
+      ..lineTo(cx + w * s * 0.028, cy + h * s * 0.333)
+      ..lineTo(cx + w * s * 0.083, cy + h * s * 0.389)
+      ..lineTo(cx + w * s * 0.111, cy + h * s * 0.444)
+      ..lineTo(cx + w * s * 0.222, cy + h * s * 0.500)
+      ..lineTo(cx - w * s * 0.014, cy + h * s * 0.500)
+      ..lineTo(cx - w * s * 0.014, cy - h * s * 0.500)
       ..close();
-    canvas.drawPath(rp, right);
+    canvas.drawPath(leftPath, leftPaint);
+
+    // 右半豆 — 从追踪轮廓提取
+    final rightPaint = Paint()
+      ..color = Colors.brown[400]!
+      ..style = PaintingStyle.fill;
+    final rightPath = Path()
+      ..moveTo(cx + w * s * 0.556, cy - h * s * 0.500)
+      ..lineTo(cx + w * s * 0.528, cy - h * s * 0.472)
+      ..lineTo(cx + w * s * 0.639, cy - h * s * 0.417)
+      ..lineTo(cx + w * s * 0.722, cy - h * s * 0.361)
+      ..lineTo(cx + w * s * 0.778, cy - h * s * 0.306)
+      ..lineTo(cx + w * s * 0.833, cy - h * s * 0.250)
+      ..lineTo(cx + w * s * 0.861, cy - h * s * 0.194)
+      ..lineTo(cx + w * s * 0.917, cy - h * s * 0.139)
+      ..lineTo(cx + w * s * 0.944, cy - h * s * 0.083)
+      ..lineTo(cx + w * s * 0.972, cy - h * s * 0.028)
+      ..lineTo(cx + w * s * 0.972, cy + h * s * 0.028)
+      ..lineTo(cx + w * s * 1.000, cy + h * s * 0.083)
+      ..lineTo(cx + w * s * 1.000, cy + h * s * 0.139)
+      ..lineTo(cx + w * s * 1.000, cy + h * s * 0.194)
+      ..lineTo(cx + w * s * 1.000, cy + h * s * 0.250)
+      ..lineTo(cx + w * s * 0.972, cy + h * s * 0.306)
+      ..lineTo(cx + w * s * 0.889, cy + h * s * 0.361)
+      ..lineTo(cx + w * s * 0.917, cy + h * s * 0.417)
+      ..lineTo(cx + w * s * 0.833, cy + h * s * 0.472)
+      ..lineTo(cx + w * s * 0.528, cy + h * s * 0.500)
+      ..lineTo(cx + w * s * 0.014, cy + h * s * 0.500)
+      ..lineTo(cx + w * s * 0.014, cy - h * s * 0.500)
+      ..close();
+    canvas.drawPath(rightPath, rightPaint);
 
     // S 形中缝
-    final line = Paint()..color = Colors.brown[700]!..style = PaintingStyle.stroke..strokeWidth = 1.5..strokeCap = StrokeCap.round;
+    final line = Paint()
+      ..color = Colors.brown[700]!
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 1.2
+      ..strokeCap = StrokeCap.round;
     final sl = Path()
-      ..moveTo(cx, cy - h * 0.37)
-      ..cubicTo(cx + w * 0.04, cy - h * 0.10, cx - w * 0.04, cy + h * 0.10, cx + w * 0.01, cy + h * 0.36);
+      ..moveTo(cx, cy - h * s * 0.48)
+      ..cubicTo(
+        cx + w * s * 0.06, cy - h * s * 0.15,
+        cx - w * s * 0.04, cy + h * s * 0.12,
+        cx + w * s * 0.02, cy + h * s * 0.46,
+      );
     canvas.drawPath(sl, line);
   }
 
