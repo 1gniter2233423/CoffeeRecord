@@ -341,70 +341,79 @@ class _BrewCard extends StatelessWidget {
 
 // ============ 自定义绘图 ============
 
-/// Brewista Artisan 风格手冲壶（缩短版）
+/// 手冲壶图标 — 简洁线稿风格
+///
+/// Brewista Artisan 灵感：直筒圆柱壶身、鹅颈壶嘴、大把手
 class _KettlePainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
-    final p = Paint()
+    final paint = Paint()
       ..color = Colors.brown[400]!
       ..style = PaintingStyle.stroke
-      ..strokeWidth = 2.2
-      ..strokeCap = StrokeCap.round;
+      ..strokeWidth = 2.8
+      ..strokeCap = StrokeCap.round
+      ..strokeJoin = StrokeJoin.round;
 
     final w = size.width;
     final h = size.height;
 
-    // ---- 壶身（矮胖圆柱） ----
-    // 垂直范围压缩到 h*0.38 ~ h*0.82
-    final bodyPath = Path()
-      ..moveTo(w * 0.25, h * 0.82)     // 左下
-      ..lineTo(w * 0.25, h * 0.42)     // 左侧垂直
-      ..cubicTo(
-        w * 0.27, h * 0.34,
-        w * 0.34, h * 0.32,
-        w * 0.50, h * 0.32,            // 左肩
-      )
-      ..cubicTo(
-        w * 0.66, h * 0.32,
-        w * 0.73, h * 0.34,
-        w * 0.75, h * 0.42,            // 右肩
-      )
-      ..lineTo(w * 0.75, h * 0.82)
-      ..close();
-    canvas.drawPath(bodyPath, p);
+    // 壶身 — 圆角矩形（更简洁稳定）
+    final body = RRect.fromRectAndRadius(
+      Rect.fromLTWH(w * 0.26, h * 0.35, w * 0.48, h * 0.48),
+      const Radius.circular(6),
+    );
+    canvas.drawRRect(body, paint);
 
-    // ---- 壶盖 ----
-    canvas.drawLine(Offset(w * 0.25, h * 0.34), Offset(w * 0.75, h * 0.34), p);
-    final lidTop = Path()
-      ..moveTo(w * 0.28, h * 0.34)
-      ..quadraticBezierTo(w * 0.50, h * 0.31, w * 0.72, h * 0.34);
-    canvas.drawPath(lidTop, p);
-    // 盖钮
-    final knob = Path()
-      ..moveTo(w * 0.44, h * 0.32)
-      ..lineTo(w * 0.56, h * 0.32)
-      ..lineTo(w * 0.57, h * 0.29)
-      ..lineTo(w * 0.43, h * 0.29)
-      ..close();
-    canvas.drawPath(knob, p);
+    // 壶盖 — 一条横线
+    canvas.drawLine(
+      Offset(w * 0.26, h * 0.35),
+      Offset(w * 0.74, h * 0.35),
+      paint,
+    );
 
-    // ---- 鹅颈壶嘴 ----
+    // 盖钮 — 小半圆
+    canvas.drawLine(
+      Offset(w * 0.46, h * 0.30),
+      Offset(w * 0.54, h * 0.30),
+      paint..strokeWidth = 3.5,
+    );
+
+    // 壶嘴 — 从右上角伸出的优雅弧线
     final spout = Path()
-      ..moveTo(w * 0.73, h * 0.42)
-      ..cubicTo(w * 0.82, h * 0.38, w * 0.90, h * 0.32, w * 0.88, h * 0.24)
-      ..cubicTo(w * 0.87, h * 0.20, w * 0.83, h * 0.18, w * 0.80, h * 0.20);
-    canvas.drawPath(spout, p);
+      ..moveTo(w * 0.72, h * 0.42)
+      ..cubicTo(
+        w * 0.84, h * 0.38,
+        w * 0.90, h * 0.28,
+        w * 0.88, h * 0.20,
+      )
+      ..cubicTo(
+        w * 0.87, h * 0.15,
+        w * 0.82, h * 0.13,
+        w * 0.78, h * 0.16,
+      );
+    canvas.drawPath(spout, paint..strokeWidth = 2.5);
 
-    // ---- 把手 ----
+    // 把手 — 左侧简单弧线
     final handle = Path()
-      ..moveTo(w * 0.25, h * 0.82)
-      ..cubicTo(w * 0.06, h * 0.76, w * 0.02, h * 0.48, w * 0.08, h * 0.36)
-      ..cubicTo(w * 0.12, h * 0.28, w * 0.18, h * 0.30, w * 0.25, h * 0.34);
-    canvas.drawPath(handle, p);
+      ..moveTo(w * 0.26, h * 0.82)
+      ..cubicTo(
+        w * 0.06, h * 0.78,
+        w * 0.04, h * 0.45,
+        w * 0.08, h * 0.32,
+      )
+      ..cubicTo(
+        w * 0.12, h * 0.24,
+        w * 0.18, h * 0.26,
+        w * 0.26, h * 0.35,
+      );
+    canvas.drawPath(handle, paint..strokeWidth = 2.8);
 
-    // ---- 底座 ----
-    canvas.drawLine(Offset(w * 0.22, h * 0.82), Offset(w * 0.78, h * 0.82), p);
-    canvas.drawLine(Offset(w * 0.24, h * 0.86), Offset(w * 0.76, h * 0.86), p..strokeWidth = 1.5);
+    // 底座 — 简单底线
+    canvas.drawLine(
+      Offset(w * 0.24, h * 0.83),
+      Offset(w * 0.76, h * 0.83),
+      paint..strokeWidth = 2.2,
+    );
   }
 
   @override
